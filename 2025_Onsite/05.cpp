@@ -1,16 +1,19 @@
-#include <iostream>
-#include <vector>
+#include <bits/stdc++.h>
 using namespace std;
+using vi = vector<int>;
+using vvi = vector<vi>;
+#define nl "\n"
+#define int long long
 
-long long factorial(long long n) {
-    long long result = 1;
-    for (long long i = 1; i <= n; i++) {
+int factorial(int n) {
+    int result = 1;
+    for (int i = 1; i <= n; i++) {
         result *= i;
     }
     return result;
 }
 
-long long combination(long long n, long long r) {
+int combination(int n, int r) {
     if (r > n) 
         return 0;
     if (r == 0 || r == n) 
@@ -18,7 +21,7 @@ long long combination(long long n, long long r) {
     return factorial(n) / (factorial(r) * factorial(n - r));
 }
 
-long long countWays(int N, int T, int M) {
+int countWays(int N, int T, int M) {
     int remainingInsects = T - N * M;
     if ( remainingInsects < 0 )
         return 0;
@@ -26,14 +29,33 @@ long long countWays(int N, int T, int M) {
     return combination(remainingInsects + N - 1, N - 1);
 }
 
-int main() {
-    int K;
-    cin >> K;
+vvi memo ;
+int solve( int N , int T , int& MM ) {
+    if( !N )
+        return !T ? 1 : 0 ;
+    else if( T <= 0 )
+        return 0 ;
     
-    while (K--) {
+    if( memo[N][T] != -1 )
+        return memo[N][T] ;
+    
+    int res = 0 ;
+    for( int i = MM ; i <= T ; i++ )
+        res += solve( N - 1 , T - i , MM ) ;
+    
+    return memo[N][T] = res ;
+}
+
+signed main() {
+    int t = 1 ;
+    cin >> t ;
+    while (t--) {
         int N, T, M;
         cin >> N >> T >> M;
-        cout << countWays(N, T, M) << '\n' ;
+        // cout << countWays(N, T, M) << nl ;
+
+        memo = vvi( N + 1 , vi( T + 1 , -1) );
+        cout << solve(N, T, M) << nl ;
     }
 
     return 0;
