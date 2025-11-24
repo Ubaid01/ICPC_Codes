@@ -78,9 +78,7 @@ void solve() {
             continue ;
         }
         vi &vec = pos[ cand.val ] ;
-        auto it1 = lower_bound( all(vec) , l) ;
-        auto it2 = upper_bound( all(vec) , r) ;
-        int cnt = distance(it1, it2);
+        int cnt = upper_bound( all(vec) , r) - lower_bound( all(vec) , l ) ; // As its vector SO distance() was also O(1) not O(n).
         int len = r - l + 1 ;
         if ( cnt * 2ll > len ) 
             cout << cand.val << nl;
