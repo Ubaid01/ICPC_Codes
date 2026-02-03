@@ -57,38 +57,19 @@ void solve() {
     int n , q ;
     cin >> n >> q ;
 
-    int ww = -1 , bd = -1 ;
+    int ww = -1 , bd = -1 , chor = -1 ;
     for( int i = 1 ; i <= n ; i++ ) {
         int a = ask( i , i , 'B' ) ;
         int b = ask( i , i , 'B' ) ;
         int c = ask( i , i , 'B' ) ;
-        if( !a && b == 1 && c == 1 ) {
-            bd = i ;
-            break ;
-        }
-    }
-    
-    for( int i = 1 ; i <= n ; i++ ) {
-        if( bd == i ) continue ;
-        int a = ask( i , i , 'B' ) ;
-        int b = ask( i , i , 'B' ) ;
-        int c = ask( i , i , 'B' ) ;
-        if( b != c ) {
+        if( b != c )
             ww = i ;
-            break ;
+        else if( b == 1 && c == 1 ) {
+            if( !a ) bd = i ;
+            else chor = i ;
         }
-    }
 
-    int chor = -1 ;
-    for( int i = 1 ; i <= n ; i++ ) {
-        if( i == bd || i == ww ) continue ;
-        int a = ask( i , i , 'B' ) ;
-        int b = ask( i , i , 'B' ) ;
-        int c = ask( i , i , 'B' ) ;
-        if( a == 1 && b == 1 && c == 1 ) {
-            chor = i ;
-            break ;
-        }
+        if( ww != -1 && bd != -1 && chor != -1 ) break ;
     }
 
     cout << "! " << bd << " " << chor << " " << ww << endl ;
