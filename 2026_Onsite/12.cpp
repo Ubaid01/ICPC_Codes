@@ -33,34 +33,35 @@ const int inf = 1e17 + 1;
 #define forr(i, a, b) for (int i = a; i >= b; i--)
 #define input(vec, n) for(int z = 0; z < (n); z++) cin >> vec[z];
 
-void dfs(int idx,int p,vector<vi> &graph,vi &arr,vector<pii> &dp){
-    dp[idx]={arr[idx-1],0};
-    for(auto it:graph[idx]){
+void dfs(int idx,int p,vector<vi> &graph,vi &arr,vector<vi> &dp){
+    dp[idx][0]=arr[idx-1];
+    int a=0,mm=inf;
+    for(auto it:graph[idx]) {
         if(it==p) continue;
         dfs(it,idx,graph,arr,dp);
-        dp[idx].f+=min(dp[it].f,dp[it].ss);
-        dp[idx].ss+=dp[it].f;
+        dp[idx][0]+=min(dp[it][0],min(dp[it][1],dp[it][2]));
+        dp[idx][1]+=min(dp[it][0],dp[it][2]);// khud white hy to child is sy cover nahi hosakta
+        dp[idx][2]+=min(dp[it][0],dp[it][2]);
+        mm=min(mm,dp[it][0]-min(dp[it][0],dp[it][2]));
     }
+    dp[idx][2]+=mm;
 }
 
 void solve() {
     int n; cin>>n;
-    vector<vi> graph(n+1);
     vi arr(n); input(arr,n);
+    vector<vi> graph(n+1);
     forn(i,0,n-1){
         int a,b; cin>>a>>b;
         graph[a].pb(b);
         graph[b].pb(a);
     }
-    if(n==1){ cout<<arr[0]<<endl; return;}
-    int res=inf;
-    
-    forn(i,1,n+1){
-        vector<pii> dp(n+1,{0,0});
-        dfs(i,-1,graph,arr,dp);
-        res=min(res,min(dp[i].f,dp[i].ss));
-    }
-    cout<<res<<endl;
+    vector<vi> dp(n+1,vi(3,0));
+    // 0-> i am black i will cover myself and my children
+    // 1-> i am white but i am covered by my parent
+    // 2 ->i am white but i am covered by atleast 1 child 
+    dfs(1,-1,graph,arr,dp);
+    cout<<min(dp[1][0],dp[1][2])<<endl;
 }
 
 int32_t main(){
